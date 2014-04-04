@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="panel right">
+        <h1>Create a Tweet</h1>
+        <p>
+            <form action="/tweet_submit" method="post">
+            {% for field in tweet_form %}{% csrf_token %}
+            {{ field }}
+            {% endfor %}
+            <input type="submit" value="tweet!">
+            </form>
+        </p>
+    </div>
+    <div class="panel left">
+        <h1>Public Tweets</h1>
+        {% for tweet in tweets %}
+        <div class="tweetWrapper">
+        {% if tweet.author.gravatar_url %}
+            <img class="avatar" height="50" width = "50" src="{{ tweet.author.gravatar_url }}">
+        {% else %} 
+            <img class="avatar" height="50" width = "50" src="../static/img/haha.png">
+        {% endif %}
+            <span class="name">{{ tweet.author.first_name }}</span>@{{ tweet.author.username }}
+            <span class="time">{{ tweet.date_created|timesince }}</span>
+            <p>{{ tweet.tweet_text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

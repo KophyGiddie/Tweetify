@@ -78,9 +78,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTHENTICATION_BACKENDS = ['tweetify_app.backend.EmailAuthBackend', ]
-
-AUTH_USER_MODEL = 'tweetify_app.MyUser'
+# AUTH_USER_MODEL = 'tweetify_app.MyUser'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
