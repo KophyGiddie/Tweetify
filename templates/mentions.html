@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+    <div class="panel right">
+        <h1>Create a Tweet</h1>
+        <p>
+            <form action="/tweet_submit" method="post">
+            {% for field in tweet_form %}{% csrf_token %}
+            {{ field }}
+            {{ tweet_form.errors }}
+            {% endfor %}
+            <input type="submit" value="Tweet!">
+            </form>
+        </p>
+    </div>
+    <div class="panel left">
+        <h1>{{user.first_name}} {{user.last_name}}'s Mentions </h1>
+        
+        {% if mention_tweets %}
+            {% for tweet in mention_tweets %}
+            <div class="tweetWrapper">
+                <a href="/user/{{ tweet.author.username }}">
+                {% if tweet.author.gravatar_url %}
+                    <img class="avatar" height="50" width = "50" src="{{ tweet.author.gravatar_url }}">
+                {% else %}
+                    <img class="avatar" height="50" width = "50" src="../static/img/haha.png">
+                {% endif %}
+                    <span class="name">{{ tweet.author.first_name }}</span>
+                </a>
+                @{{ tweet.author.username }}
+                <p>
+                    {{ tweet.tweet_text }}
+                </p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="tweetWrapper"> 
+                <p> Sorry you are not that popular </p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

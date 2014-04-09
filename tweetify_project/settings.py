@@ -21,8 +21,6 @@ SECRET_KEY = 't(n$kgn4v=4rqy3uv+ug740q!m!-p%bi4(&6v31)myapc)8s&_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-LOGIN_URL = '/'
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -89,3 +87,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+# LOGIN_URL = '/'
+# LOGIN_REDIRECT_URL ?
+
+TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]

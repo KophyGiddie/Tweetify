@@ -14,23 +14,18 @@
         </p>
     </div>
     <div class="panel left">
-        <h1>Public Tweets</h1>
-        {% for tweet in tweets %}
+        <h1>All Users</h1>
+        {% for myuser in user_list %}
         <div class="tweetWrapper">
-        {% if tweet.author.gravatar_url %}
-            <img class="avatar" height="50" width = "50" src="{{ tweet.author.gravatar_url }}">
+        {% if myuser.gravatar_url %}
+            <img class="avatar" height="50" width = "50" src="{{ myuser.gravatar_url }}">
         {% else %} 
             <img class="avatar" height="50" width = "50" src="../static/img/haha.png">
         {% endif %}
-            <span class="name">{{ tweet.author.first_name }}</span>@<a href="/user/{{tweet.author.username}}">{{ tweet.author.username }}</a>
-            <span class="time">{{ tweet.date_created|timesince }}</span>
-        
-        {% if tweet.hashtags %}   
-            <p>{{ tweet.hashtags|safe  }}</p>
-        {% else %} 
-            <p>{{ tweet.tweet_text }}</p>
-        {% endif %}
+            <a href="/user/{{myuser.username}}"><span class="name">{{ myuser.first_name }} {{ myuser.last_name }} </span></a>
+            <p>&nbsp</p>
+
         </div>
-        {% endfor %}
+        {% endfor %}    
     </div>
 {% endblock %}

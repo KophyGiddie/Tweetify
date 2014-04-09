@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="panel right">
+        <h1>Create a Tweet</h1>
+        <p>
+            <form action="/tweet_submit" method="post">
+            {% for field in tweet_form %}{% csrf_token %}
+            {{ field }}
+            {{ tweet_form.errors }}
+            {% endfor %}
+            <input type="submit" value="tweet!">
+            </form>
+        </p>
+    </div>
+    <div class="panel left">
+        <h1>Follows</h1>
+        {% for user in user_follows %}
+        <div class="tweetWrapper">
+        {% if user.gravatar_url %}
+            <img class="avatar" height="50" width = "50" src="{{ user.gravatar_url }}">
+        {% else %} 
+            <img class="avatar" height="50" width = "50" src="../static/img/haha.png">
+        {% endif %}
+            <a href="/user/{{user.username}}"><span class="name">{{ user.first_name }} {{ user.last_name }} </span></a>
+        </div>
+        {% endfor %}
+        
+
+
+
+        <h1>Followed By</h1>
+        {% for user in user_followed_by %}
+        <div class="tweetWrapper">
+        {% if user.gravatar_url %}
+            <img class="avatar" height="50" width = "50" src="{{ user.gravatar_url }}">
+        {% else %} 
+            <img class="avatar" height="50" width = "50" src="../static/img/haha.png">
+        {% endif %}
+            <a href="/user/{{user.username}}"><span class="name">{{ user.first_name }} {{ user.last_name }} </span></a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

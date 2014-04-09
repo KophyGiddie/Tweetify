@@ -12,6 +12,7 @@
             <form action="/tweet_submit" method="post">{% csrf_token %}
             {% for field in tweet_form %}
             {{ field }}
+            {{ tweet_form.errors }}
             {% endfor %}
             <input type="submit" value="Tweet!">
             </form>
@@ -22,13 +23,15 @@
         <form action="/delete_user" method="post">{% csrf_token %}
                 <input type="submit" id="btnLogOut" value="Delete User">
         </form>
-        <form action="/settings" method="post">{% csrf_token %}
-            {% for field in user_form %}
-                {{ field }}
-                {{ user_form.errors }}
-            {% endfor %}
-            <input type="submit" value="Update">
-        </form>
-        </div>
+
+    <form action="/settings" method="post">{% csrf_token %}
+        {% for field in form %}
+        {{ field }}
+        {{ field.errors }}
+        {{ auth_form.non_field_errors }}
+        {% endfor %}
+        <input type="submit" id="btnLogIn" value="update">
+    </form>
+
     </div>
 {% endblock %}

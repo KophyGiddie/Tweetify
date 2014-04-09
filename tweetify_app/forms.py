@@ -2,9 +2,15 @@ from models import MyUser
 from django import forms
 from django.core.exceptions import ValidationError
 from models import Tweet
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import authenticate
 
 class UserCreateForm(forms.ModelForm):
+
+    error_messages = {
+        'duplicate_username': _("A user with that username already exists."),
+        'password_mismatch': _("The two password fields didn't match."),
+    }
 
     email = forms.EmailField(required=True, widget=forms.widgets.TextInput(attrs=
     {'placeholder': 'Email'}))
@@ -21,6 +27,7 @@ class UserCreateForm(forms.ModelForm):
  
  
     class Meta:
+        # TODO: remove password2
         fields = ['email', 'username', 'first_name', 'last_name', 'password1',
                   'password2']
         model = MyUser
@@ -37,6 +44,25 @@ class UserCreateForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        try:
+            MyUser._default_manager.get(username=username)
+        except MyUser.DoesNotExist:
+            return username
+        raise forms.ValidationError(
+            self.error_messages['duplicate_username'],
+            code='duplicate_username',
+        )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        try:
+            MyUser._default_manager.get(email=email)
+        except MyUser.DoesNotExist:
+            return email
+        raise forms.ValidationError('Duplicate Email')
 
 
 class AuthenticateForm(forms.Form):
@@ -58,8 +84,9 @@ class AuthenticateForm(forms.Form):
 
         
 class TweetForm(forms.ModelForm):
-    tweet_text = forms.CharField(required=True, widget=forms.widgets.Textarea(attrs={'class': 'tweet_text'}))
+    tweet_text = forms.CharField(required=True, widget=forms.widgets.Textarea(attrs={'cols':'26', 'class': 'tweet_text'}))
 
     class Meta:
         model = Tweet
         fields = ['tweet_text']
+

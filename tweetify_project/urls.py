@@ -4,14 +4,18 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^$', 'tweetify_app.views.index'), # root
-    url(r'^login$', 'tweetify_app.views.login_view'), # login
-    url(r'^logout$', 'tweetify_app.views.logout_view'), # logout
-    url(r'^signup$', 'tweetify_app.views.signup'), # signup
+    url(r'^$', 'tweetify_app.views.index'),
+    url(r'^login$', 'tweetify_app.views.login_view'),
+    url(r'^logout$', 'tweetify_app.views.logout_view'),
+    url(r'^signup$', 'tweetify_app.views.signup'),
     url(r'^settings$', 'tweetify_app.views.settings'),
     url(r'^delete_user$', 'tweetify_app.views.delete_user'),
     url(r'^tweet_submit$', 'tweetify_app.views.tweet_submit'),
-    url(r'^my_tweets$', 'tweetify_app.views.my_tweets'),    
+    url(r'^user/people$', 'tweetify_app.views.people'),
+    url(r'^user/(?P<username>\w+)$', 'tweetify_app.views.user'),
+    url(r'^follow/(?P<username>\w+)$', 'tweetify_app.views.follow'),
+    url(r'^unfollow/(?P<username>\w+)$', 'tweetify_app.views.unfollow'),
+    url(r'^mentions$', 'tweetify_app.views.mentions'),
+    url(r'^userlist$', 'tweetify_app.views.userlist'),
     url(r'^admin/', include(admin.site.urls)),
 )

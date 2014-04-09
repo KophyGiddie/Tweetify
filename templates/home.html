@@ -2,10 +2,10 @@
  
 {% block login %}
     <form action="/login" method="post">{% csrf_token %}
+        {{ auth_form.non_field_errors }}
         {% for field in auth_form %}
         {{ field }}
         {{ field.errors }}
-        {{ auth_form.non_field_errors }}
         {% endfor %}
         <input type="submit" id="btnLogIn" value="Log In">
     </form>
@@ -13,11 +13,12 @@
  
 {% block content %}
 
-<img width = '526' height = '315' src="../static/img/frog.jpg">
+<img width = '526' height = '315' src="../static/img/back.jpg">
 <div class="panel right">
     <h1>New to Tweetify?</h1>
     <p>
         <form action="/signup" method="post">{% csrf_token %}
+            {{user_form.non_field_errors}}
             {% for field in user_form %}
                 {{ field }}
                 {{ field.errors }}

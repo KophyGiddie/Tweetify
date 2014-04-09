@@ -10,10 +10,11 @@
             <span>TWEETIFY</span>
             {% block login %}
             <a href="/">Home</a> &nbsp &nbsp &nbsp
-            <a href="/users/">Users</a> &nbsp &nbsp &nbsp
-            <a href="/users/{{ user.username }}">My Profile</a> &nbsp &nbsp &nbsp
-            <a href="/my_tweets">Profile</a> &nbsp &nbsp &nbsp
+            <a href="/user/{{user.username}}">Profile</a> &nbsp &nbsp &nbsp
+            <a href="/user/people">My Follows</a> &nbsp &nbsp &nbsp
+            <a href="/mentions">My Mentions</a> &nbsp &nbsp &nbsp
             <a href="/settings"> Settings </a> &nbsp &nbsp &nbsp
+            <a href="/userlist"> User List </a> &nbsp &nbsp &nbsp
             Logged in as {{user.username}}
             <form action="/logout">
                 <input type="submit" id="btnLogOut" value="Log Out">
@@ -23,20 +24,6 @@
     </header>
     <div id="content">
         <div class="wrapper">
-            {% block flash %}
-            {% if auth_form.non_field_errors or user_form.non_field_errors or tweet_form.errors %}
-            <div class="flash error">
-                {{ auth_form.non_field_errors }}
-                {{ user_form.non_field_errors }}
-                {{ tweet_form.errors }}
-            </div>
-            {% endif %}
-            {% if notice %}
-            <div class="flash notice">
-                {{ notice }}
-            </div>
-            {% endif %}
-            {% endblock %}
  
             {% block content %}
  
@@ -48,5 +35,10 @@
             Tweetify - A twitter Clone
         </div>
     </footer>
+      <script type="text/javascript" src="http://makeuse.googlecode.com/files/makeuse.tripleflap.js"></script><script type="text/javascript">
+        var twitterAccount = "kophygiddie";
+        var tweetThisText = "Wow kophygiddie making a difference watch for this dude";
+        tripleflapInit();
+    </script>
 </body>
 </html>

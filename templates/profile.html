@@ -1,9 +1,4 @@
 {% extends "base.html" %}
-{% block login %}
-    {% with user.username as username %}
-        {{ block.super }}
-    {% endwith %}
-{% endblock %}
  
 {% block content %}
     <div class="panel right">
@@ -12,16 +7,30 @@
             <form action="/tweet_submit" method="post">
             {% for field in tweet_form %}{% csrf_token %}
             {{ field }}
+            {{ tweet_form.errors }}
             {% endfor %}
             <input type="submit" value="Tweet!">
             </form>
         </p>
     </div>
     <div class="panel left">
-        <h1>My Tweets</h1>
+        <h1>{{myuser.first_name}} {{myuser.last_name}} </h1>
+        {% if value == True  %}
+          <form action="/unfollow/{{myuser.username}}" method="post">{% csrf_token %}
+               <input type="submit" value="Unfollow">
+          </form>        
+        {% elif value == False and myuser.username != user.username%}
+          <form action="/follow/{{myuser.username}}" method="post">{% csrf_token %}
+               <input type="submit" value="Follow">
+          </form>
+        {% endif %}
+        <div class = "tweetWrapper">
+            <p>{{myuser.username}}'s Tweets</p>
+        </div>
+
         {% for tweet in tweets %}
         <div class="tweetWrapper">
-            <a href="/users/{{ tweet.author.username }}">
+            <a href="/user/{{ tweet.author.username }}">
             {% if tweet.author.gravatar_url %}
                 <img class="avatar" height="50" width = "50" src="{{ tweet.author.gravatar_url }}">
             {% else %}
@@ -30,9 +39,15 @@
                 <span class="name">{{ tweet.author.first_name }}</span>
             </a>
             @{{ tweet.author.username }}
+
+
+            {% if tweet.hashtags %}   
+                <p>{{ tweet.hashtags|safe  }}</p>
+            {% else %} 
             <p>
                 {{ tweet.tweet_text }}
             </p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

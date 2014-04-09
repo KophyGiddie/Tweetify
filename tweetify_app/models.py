@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
++from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 import hashlib
 import re
@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.core import validators
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import render
 
 
 class UserManager(BaseUserManager):
@@ -27,6 +28,13 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+    def is_following(self, user, obj):
+        """ Returns `True` or `False` """
+        if isinstance(user, AnonymousUser):
+            return False
+        return 0 < self.follows(obj).filter(user=user).count()
+
 
     def create_user(self, username, email=None, password=None, **extra_fields):
         return self._create_user(username, email, password, False, False,
@@ -59,11 +67,11 @@ class MyUser(AbstractBaseUser):
             validators.RegexValidator(re.compile('^[\w.@+-]+$'), _('Enter a valid lastname.'), 'invalid')
         ])    
     
-    email = models.EmailField('email address', unique=True)
+    email = models.EmailField('email address', unique=True, )
     joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
+    follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -74,6 +82,7 @@ class MyUser(AbstractBaseUser):
         verbose_name_plural = _('users')
 
     def get_absolute_url(self):
+        # TODO: reverse function?
         return "/users/%s/" % urlquote(self.username)
 
     def get_full_name(self):
@@ -96,53 +105,29 @@ class MyUser(AbstractBaseUser):
     def gravatar_url(self):
         return "http://www.gravatar.com/avatar/%s" % hashlib.md5(self.email).hexdigest()
 
-    def get_profile(self):
-        """
-        Returns site-specific profile for this user. Raises
-        SiteProfileNotAvailable if this site does not allow profiles.
-        """
-        warnings.warn("The use of AUTH_PROFILE_MODULE to define user profiles has been deprecated.",
-            DeprecationWarning, stacklevel=2)
-        if not hasattr(self, '_profile_cache'):
-            from django.conf import settings
-            if not getattr(settings, 'AUTH_PROFILE_MODULE', False):
-                raise SiteProfileNotAvailable(
-                    'You need to set AUTH_PROFILE_MODULE in your project '
-                    'settings')
-            try:
-                app_label, model_name = settings.AUTH_PROFILE_MODULE.split('.')
-            except ValueError:
-                raise SiteProfileNotAvailable(
-                    'app_label and model_name should be separated by a dot in '
-                    'the AUTH_PROFILE_MODULE setting')
-            try:
-                model = models.get_model(app_label, model_name)
-                if model is None:
-                    raise SiteProfileNotAvailable(
-                        'Unable to load the profile model, check '
-                        'AUTH_PROFILE_MODULE in your project settings')
-                self._profile_cache = model._default_manager.using(
-                                   self._state.db).get(user__id__exact=self.id)
-                self._profile_cache.user = self
-            except (ImportError, ImproperlyConfigured):
-                raise SiteProfileNotAvailable
-        return self._profile_cache
-
-
-    # def __unicode__(self):
-    #     return self.email
-
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(MyUser)
-    follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
 
 class Tweet(models.Model):
-    tweet_text = models.CharField(max_length=140)
+    tweet_text = models.CharField(blank=False, max_length=140)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     date_created = models.DateTimeField(auto_now=True)
+
+    def hashtags(self):
+        mylist = re.findall('@\w+', self.tweet_text):
+
+            startPoint = self.tweet_text.find('@')
+            endPoint = " "
+            newtext = self.tweet_text[startPoint:]
+            endIndex = newtext.find(endPoint)
+            username = newtext[0:endIndex]
+            if username.find('.') != -1:
+                username = username[0:len(username)-1]
+            username1 = username[1:]
+            add_a = "<a href = '/user/%s'> " % username1
+            newstring = str(add_a) + str(username)
+            newstring2 = newstring + str('</a>')
+            self.tweet_text1 = self.tweet_text.replace(username, newstring2)
+            return self.tweet_text1
 
     def __unicode__(self):
         return self.tweet_text
 
-MyUser.profile = property(lambda u: MyUser.objects.get_or_create(user=u)[0])
