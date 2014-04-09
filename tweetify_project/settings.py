@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import dj_database_url
-import os
 
-DATABASES['default'] =  dj_database_url.config()
+import os
+import dj_database_url
+
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -67,8 +67,8 @@ WSGI_APPLICATION = 'tweetify_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.psycopg2',
+        'NAME': "twitter",
     }
 }
 
@@ -85,7 +85,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATABASES['default'] =  dj_database_url.config()
+
 AUTHENTICATION_BACKENDS = ['tweetify_app.backend.EmailAuthBackend', ]
+
 
 AUTH_USER_MODEL = 'tweetify_app.MyUser'
 # Static files (CSS, JavaScript, Images)
