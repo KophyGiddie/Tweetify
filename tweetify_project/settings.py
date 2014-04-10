@@ -14,11 +14,7 @@ import os
 import dj_database_url
 
 
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -67,8 +63,12 @@ WSGI_APPLICATION = 'tweetify_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.psycopg2',
-        'NAME': "twitter",
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'twitter',
+        'USER': 'postgres',
+        'PASSWORD': '123456789',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -94,7 +94,15 @@ AUTH_USER_MODEL = 'tweetify_app.MyUser'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
+
 STATIC_URL = '/static/'
+
+STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')

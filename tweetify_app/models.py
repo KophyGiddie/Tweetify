@@ -1,4 +1,4 @@
-+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 import hashlib
 import re
@@ -112,8 +112,7 @@ class Tweet(models.Model):
     date_created = models.DateTimeField(auto_now=True)
 
     def hashtags(self):
-        mylist = re.findall('@\w+', self.tweet_text):
-
+        if self.tweet_text.find('@') != -1:
             startPoint = self.tweet_text.find('@')
             endPoint = " "
             newtext = self.tweet_text[startPoint:]
