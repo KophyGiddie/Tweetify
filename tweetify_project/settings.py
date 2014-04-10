@@ -26,8 +26,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 't(n$kgn4v=4rqy3uv+ug740q!m!-p%bi4(&6v31)myapc)8s&_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 
 
@@ -61,14 +61,21 @@ WSGI_APPLICATION = 'tweetify_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'twitter',
+#         'USER': 'postgres',
+#         'PASSWORD': '123456789',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'twitter',
-        'USER': 'postgres',
-        'PASSWORD': '123456789',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -85,7 +92,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DATABASES['default'] =  dj_database_url.config()
+# DATABASES['default'] =  dj_database_url.config()
 
 AUTHENTICATION_BACKENDS = ['tweetify_app.backend.EmailAuthBackend', ]
 
