@@ -102,7 +102,7 @@ ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'static'
+STATIC_ROOT = 'staticfiles'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
